@@ -8,6 +8,18 @@ import (
 	"testing"
 )
 
+type Coordinate2D struct {
+	X, Y int
+}
+
+func (c Coordinate2D) Add(o Coordinate2D) Coordinate2D {
+	return Coordinate2D{c.X + o.X, c.Y + o.Y}
+}
+
+func Get2DDirections() []Coordinate2D {
+	return []Coordinate2D{{-1, 0}, {1, 0}, {0, 1}, {0, -1}}
+}
+
 func GetInput(t *testing.T, file string) string {
 	goldenfile := filepath.Join("testdata", file)
 	want, err := os.ReadFile(goldenfile)
