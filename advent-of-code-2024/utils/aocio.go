@@ -16,6 +16,10 @@ func (c Coordinate2D) Add(o Coordinate2D) Coordinate2D {
 	return Coordinate2D{c.X + o.X, c.Y + o.Y}
 }
 
+func (c Coordinate2D) Opposite() Coordinate2D {
+	return Coordinate2D{-c.X, -c.Y}
+}
+
 func Get2DDirections() []Coordinate2D {
 	return []Coordinate2D{{-1, 0}, {1, 0}, {0, 1}, {0, -1}}
 }
