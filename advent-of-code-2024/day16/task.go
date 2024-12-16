@@ -28,8 +28,45 @@ func part1(input string) int {
 
 func part2(input string) int {
 	reindeerPos, endPos, lines := parse(input)
-	bfs(lines, reindeerPos, endPos)
-	return 0
+	score, closed := bfs(lines, reindeerPos, endPos)
+	return backtrack(reindeerPos, endPos, score, closed)
+}
+
+func backtrack(reindeerPos, endPos pos, best int, bt map[posAndDir]int) int {
+	nodes := map[pos][]int{}
+	for k, v := range bt {
+		if _, e := nodes[k.pos]; !e {
+			nodes[k.pos] = []int{}
+		}
+		nodes[k.pos] = append(nodes[k.pos], v)
+	}
+
+	closed := map[pos]bool{reindeerPos: true, endPos: true}
+	var rec func(pos, int) bool
+	rec = func(p pos, score int) bool {
+		if p == reindeerPos {
+			return true
+		}
+		found := false
+		for _, d := range utils.Get2DDirections() {
+			n := p.Add(d)
+
+			for _, ov := range nodes[n] {
+				if ov == score-1 || ov == score-1001 {
+					res := rec(n, ov)
+					found = found || res
+				}
+			}
+		}
+
+		if found {
+			closed[p] = true
+		}
+		return found
+	}
+
+	rec(endPos, best)
+	return len(closed)
 }
 
 func parse(input string) (utils.Coordinate2D, utils.Coordinate2D, []string) {
@@ -57,7 +94,7 @@ func bfs(lines []string, reindeerPos, endPos pos) (int, map[posAndDir]int) {
 	bestScore := math.MaxInt
 	reindeer := posAndDir{pos: reindeerPos, dir: pos{X: 1, Y: 0}}
 	closed := map[posAndDir]int{reindeer: 0}
-	open := []scored{{pos: reindeer.pos, dir: reindeer.dir, score: 0}}
+	open := []scored{{pos: reindeerPos, dir: reindeer.dir, score: 0}}
 	for len(open) > 0 {
 		e := open[0]
 		open = open[1:]
@@ -75,7 +112,7 @@ func bfs(lines []string, reindeerPos, endPos pos) (int, map[posAndDir]int) {
 				}
 
 				prevScore, exists := closed[posAndDir{pos: n, dir: d}]
-				if !exists || prevScore >= nextScore {
+				if !exists || prevScore > nextScore {
 					closed[posAndDir{pos: n, dir: d}] = nextScore
 					open = append(open, scored{pos: n, dir: d, score: nextScore})
 				}

@@ -14,7 +14,7 @@ func TestPart1(t *testing.T) {
 
 func TestPart2(t *testing.T) {
 	require.Equal(t, 45, part2(testInput))
-	require.Equal(t, 0, part2(utils.GetInput(t, "input.txt")))
+	require.Equal(t, 559, part2(utils.GetInput(t, "input.txt")))
 }
 
 const testInput = `###############
