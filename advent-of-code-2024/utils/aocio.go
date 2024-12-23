@@ -20,6 +20,10 @@ func (c Coordinate2D) Opposite() Coordinate2D {
 	return Coordinate2D{-c.X, -c.Y}
 }
 
+func (c Coordinate2D) Manhatten(o Coordinate2D) int {
+	return IntAbs(c.X-o.X) + IntAbs(c.Y-o.Y)
+}
+
 func Get2DDirections() []Coordinate2D {
 	return []Coordinate2D{{-1, 0}, {1, 0}, {0, 1}, {0, -1}}
 }
@@ -90,4 +94,11 @@ func IntPow(n, m int) int {
 		result *= n
 	}
 	return result
+}
+
+func IntAbs(a int) int {
+	if a > 0 {
+		return a
+	}
+	return -a
 }
